@@ -37,6 +37,7 @@ async function products(page = 0, count = 5) {
 
   return name;
 }
+products
 
 
 async function product(product_id) {
@@ -57,23 +58,8 @@ async function product(product_id) {
   from name as name) as N
   where N.id=${product_id};
   `)
-
-
-  // const name = await pool.query( `
-  // SELECT name.id, name.name, name.slogan, name.description, name.category, name.default_price, features.product_id, features.feature, features.value
-  // FROM name
-  // JOIN features
-  // ON name.id = features.product_id
-  // Where product_id=${product_id}
-  // LIMIT 2;
-  // `)
   return productInfo;
 }
-  // SELECT id, name, slogan, description, category, default_price FROM public."Product_name" WHERE id=${product_id}
-  //SELECT * FROM public."Product_name" JOIN public."Product_features" ON public."Product_name".id = public."Product_features".product_id LIMIT 10;
-  //SELECT * FROM public."Product_name" where id=${product_id} JOIN public."Product_features" ON public."Product_name".product_id = public."Product_features".id;
-
-
 
 
 module.exports = {
