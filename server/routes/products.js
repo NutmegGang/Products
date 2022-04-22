@@ -33,4 +33,8 @@ router.get('/:product_id/styles', (req,res, next) => {
     .catch(err => res.status(500).json(err))
 })
 
+router.get('/loaderio-57a346494ee3cf906f7f7ebb13b488eb', (req,res,next) => {
+  res.send("loaderio-57a346494ee3cf906f7f7ebb13b488eb")
+})
+
 module.exports = router;
