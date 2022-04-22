@@ -1,0 +1,38 @@
+{
+  "config": {
+    "target": "http://localhost:3005",
+    "phases": [
+      {
+        "duration": 10,
+        "arrivalRate": 1
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "flow": [
+        {
+          "get": {
+            "url": "/products"
+          }
+        },
+        {
+          "get": {
+            "url": "/products/1/related"
+          }
+        },
+        {
+          "get": {
+            "url": "/products/432/styles"
+          }
+        },
+        {
+          "get": {
+            "url": "/produts/421"
+          }
+        }
+      ]
+    }
+  ]
+}
+
