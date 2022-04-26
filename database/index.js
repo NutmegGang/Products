@@ -5,11 +5,13 @@ require('dotenv').config();
 //const sql = postgres(process.env.PG_CONNECTION_STRING)
 
 const pool = new Pool({
-  user: process.env.USER,
+  //user: process.env.USER,
+  user: 'ubuntu',
   host: process.env.HOST,
   database: process.env.DATABASE,
   port: process.env.DB_PORT
 });
+
 
 async function products(page = 0, count = 5) {
   const name = await pool.query( `
@@ -69,12 +71,10 @@ SELECT name.id AS product_id,
        (SELECT sty.id as style_id, sty.name, sty.original_price, sty.sale_price, sty.default_style as "default?",
 
 
-          (SELECT json_agg(ph) as ph
-           FROM (SELECT ph.thumbnail_url, ph.url
-                 FROM photos ph
-                 WHERE id=sty.id
-                 ) as ph
-          )as photos,
+       (SELECT json_agg(json_build_object('thumbnail_url', photos.thumbnail_url, 'url', photos.url)) as photos
+       FROM photos
+       WHERE photos.style_id = sty.id
+       GROUP BY photos.style_id),
 
 
           (SELECT jsonb_object_agg(skus.id, json_build_object('quantity', skus.quantity, 'size', skus.size)) as sk

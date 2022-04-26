@@ -4,7 +4,7 @@
     "phases": [
       {
         "duration": 10,
-        "arrivalRate": 1
+        "arrivalRate": 10
       }
     ]
   },
@@ -18,14 +18,10 @@
         },
         {
           "get": {
-            "url": "/products/1/related"
+            "url": "/products/87665"
           }
         },
-        {
-          "get": {
-            "url": "/products/432/styles"
-          }
-        },
+
         {
           "get": {
             "url": "/produts/421"

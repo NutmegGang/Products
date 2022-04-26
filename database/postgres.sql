@@ -5,14 +5,13 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS name
 (
-    id integer NOT NULL,
+    product_id integer NOT NULL,
     name text NOT NULL,
     slogan text NOT NULL,
     description text NOT NULL,
     category text NOT NULL,
     default_price character varying(20) NOT NULL,
-    features text[],
-    PRIMARY KEY (id)
+    PRIMARY KEY (product_id)
 );
 
 CREATE TABLE IF NOT EXISTS features
@@ -27,7 +26,7 @@ CREATE TABLE IF NOT EXISTS features
 CREATE TABLE IF NOT EXISTS styles
 (
     id integer NOT NULL,
-    "productId" integer NOT NULL,
+    product_id integer NOT NULL,
     name text NOT NULL,
     sale_price text,
     original_price text,
@@ -38,7 +37,7 @@ CREATE TABLE IF NOT EXISTS styles
 CREATE TABLE IF NOT EXISTS photos
 (
     id integer,
-    "styleId" integer NOT NULL,
+    style_id integer NOT NULL,
     thumbnail_url text NOT NULL,
     url text NOT NULL,
     PRIMARY KEY (id)
@@ -47,7 +46,7 @@ CREATE TABLE IF NOT EXISTS photos
 CREATE TABLE IF NOT EXISTS skus
 (
     id integer NOT NULL,
-    "styleId" integer NOT NULL,
+    style_id integer NOT NULL,
     size text NOT NULL,
     quantity integer NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
@@ -63,30 +62,30 @@ CREATE TABLE IF NOT EXISTS related
 
 ALTER TABLE IF EXISTS features
     ADD FOREIGN KEY (product_id)
-    REFERENCES name (id) MATCH SIMPLE
+    REFERENCES name (product_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
--- Do I really need two of these?
--- ALTER TABLE IF EXISTS features
---     ADD FOREIGN KEY (product_id)
---     REFERENCES name (id) MATCH SIMPLE
---     ON UPDATE NO ACTION
---     ON DELETE NO ACTION
---     NOT VALID;
+
+ALTER TABLE IF EXISTS features
+    ADD FOREIGN KEY (product_id)
+    REFERENCES name (product_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
 
 
 ALTER TABLE IF EXISTS styles
-    ADD FOREIGN KEY ("productId")
-    REFERENCES name (id) MATCH SIMPLE
+    ADD FOREIGN KEY (product_id)
+    REFERENCES name (product_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
 ALTER TABLE IF EXISTS photos
-    ADD FOREIGN KEY ("styleId")
+    ADD FOREIGN KEY (style_id)
     REFERENCES styles (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -94,7 +93,7 @@ ALTER TABLE IF EXISTS photos
 
 
 ALTER TABLE IF EXISTS skus
-    ADD FOREIGN KEY ("styleId")
+    ADD FOREIGN KEY (style_id)
     REFERENCES styles (id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -103,21 +102,30 @@ ALTER TABLE IF EXISTS skus
 
 ALTER TABLE IF EXISTS related
     ADD FOREIGN KEY (product_id)
-    REFERENCES name (id) MATCH SIMPLE
+    REFERENCES name (product_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-copy public."name" (id, name, slogan, description, category, default_price) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/product.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+CREATE INDEX product_id_index ON Features(product_id);
+CREATE INDEX style_id_index ON Photos(style_id);
+CREATE INDEX related_prod_id_index ON Related(product_id);
+CREATE INDEX skus_style_id ON Skus(style_id);
+CREATE INDEX styles_product_id ON Styles(product_id);
 
-copy public."related" FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/related.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 
-copy public."features" (id, product_id, feature, value) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/features.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 
-copy public."styles" (id, "productId", name, sale_price, original_price, default_style) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/styles.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 
-copy public."photos" (id, "styleId", thumbnail_url, url) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/photos.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+copy name (product_id, name, slogan, description, category, default_price) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/product.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 
-copy public."skus" (id, "styleId", size, quantity) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/skus.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+copy related FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/related.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+
+copy features (id, product_id, feature, value) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/features.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+
+copy styles (id, product_id, name, sale_price, original_price, default_style) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/styles.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+
+copy photos (id, style_id, thumbnail_url, url) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/photos.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
+
+copy skus (id, style_id, size, quantity) FROM '/Users/jupiter/Hack_Reactor/rfe2202/SDC/data/skus.csv' DELIMITER ',' CSV HEADER QUOTE '"' ESCAPE '''';
 END;
