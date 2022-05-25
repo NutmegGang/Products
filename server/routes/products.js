@@ -9,28 +9,28 @@ router.get('/', (req,res, next) => {
   const {page, count} = req.query;
   products(page, count)
   .then(data => res.status(200).json(data.rows))
-  .catch(err => res.status(500).send(err))
+  .catch(err => res.next(500))
 })
 
 router.get('/:product_id', (req,res, next) => {
   const { product_id } = req.params
   product(product_id)
   .then(data => res.json(data.rows))
-  .catch(err => console.warn(err))
+  .catch(err => next(err))
 })
 
 router.get('/:product_id/related', (req,res, next) => {
   const { product_id } = req.params
   related(product_id)
   .then(data => res.status(200).json(data))
-  .catch(err => res.status(500).json(err))
+  .catch(err => res.next(err))
 })
 
 router.get('/:product_id/styles', (req,res, next) => {
   const { product_id } = req.params
   styles(product_id)
     .then(data => res.status(200).json(data))
-    .catch(err => res.status(500).json(err))
+    .catch(err => res.next(err))
 })
 
 router.get('/loaderio-57a346494ee3cf906f7f7ebb13b488eb', (req,res,next) => {

@@ -4,7 +4,7 @@
     "phases": [
       {
         "duration": 10,
-        "arrivalRate": 10
+        "arrivalRate": 4
       }
     ]
   },
@@ -24,7 +24,7 @@
 
         {
           "get": {
-            "url": "/produts/421"
+            "url": "/produts/421/styles"
           }
         }
       ]

@@ -17,7 +17,7 @@ app.use('/products', products)
 
 
 app.use((err, req, res, next) => {
-  res.json(err)
+  res.status(500).send(err)
 })
 
 app.listen(PORT, () => {

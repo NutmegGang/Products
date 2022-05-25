@@ -28,4 +28,3 @@ const informationSchema = new mongoose.Schema({
 //   value: String
 // })
 
-const styles
